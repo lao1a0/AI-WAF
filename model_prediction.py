@@ -1,36 +1,33 @@
 '''
-@Time : 2023-10-07 15:51
+@Time : 2023-10-09 16:42
 @Author : laolao
 @FileName: model_prediction.py
 '''
 
-from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
-import html
 
-with open('file/lgs.pickle', 'rb') as input:
-    w = pickle.load(input)
+with open('file/logs_add_isop.pkl', 'rb') as input:
+    v, w = pickle.load(input)
 
-with open("data/nsfocus_isop.txt", "r") as f:
+with open("data/badqueries.txt", "r", encoding='utf-8') as f:
     my_code = f.readlines()
 
+def predict(my_code,v, w):
+    X_predict = v.transform(my_code)
+    res = w.predict(X_predict)
+    res_list = []
 
-def get_ngrams(query):
-    tempQuery = str(query)
-    ngrams = []
-    for i in range(0, len(tempQuery) - 3):
-        ngrams.append(tempQuery[i:i + 3])
-    return ngrams
+    for q, r in zip(my_code, res):
+        tmp = '正常请求' if r == 0 else '恶意请求'
+        res_list.append({'url': q, 'res': tmp})
 
+    import pandas as pd
 
-vectorizer = TfidfVectorizer(tokenizer=get_ngrams)
-print(my_code)
-X_predict = vectorizer.fit_transform(my_code)
-res = w.predict(X_predict)
-res_list = []
-for q, r in zip(my_code, res):
-    tmp = '正常请求' if r == 0 else '恶意请求'
-    # print('{}  {}'.format(q,tmp))
-    q_entity = html.escape(q)
-    res_list.append({'url': q_entity, 'res': tmp})
-print("预测的结果列表:{}".format(str(res_list)))
+    df = pd.DataFrame(res_list)
+    print("恶意请求：")
+    print(df.loc[df['res'] == '恶意请求'].count())
+    print("正常请求：")
+    print(df.loc[df['res'] == '正常请求'].count())
+    df.to_csv("output.csv")
+    return df
+predict(my_code,v, w)

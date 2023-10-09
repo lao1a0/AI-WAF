@@ -25,7 +25,7 @@ def get_ngrams(query):
 
 vectorizer = TfidfVectorizer(tokenizer=get_ngrams)
 print(my_code)
-X_predict = vectorizer.transform(my_code)
+X_predict = vectorizer.fit_transform(my_code)
 res = w.predict(X_predict)
 res_list = []
 for q, r in zip(my_code, res):

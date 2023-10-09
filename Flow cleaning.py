@@ -26,16 +26,14 @@ def cleanse_poc(string):
     r"\bHost\s*:\s*\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}",
     r"\bHTTP/1\.[01]",
     r"\b\w+://[^ ]+",
+    '[\\u4e00-\\u9fa5]',
      r"(\s+\S\s+|\s+)"]
     for i in white_list:
         string = re.sub(i, '', string)
     return ''.join(string.split('\n'))
 
-# %%cmd
-# pip install python-docx
-
 import os
-current_path ='G:\\实习\\张家口重保\\'
+current_path ='G:\\实习\\张家口护网+重保\\'
 import docx
 
 my_code=[]
@@ -45,5 +43,7 @@ for file in os.listdir(current_path):
         doc = docx.Document(file_path)
         poc = doc.paragraphs[9].text+"\n"+doc.paragraphs[10].text
         my_code.append(cleanse_poc(poc))
-with open("data/nsfocus_isop.txt", "w",encoding='gbk') as f:
+with open("data/nsfocus_isop_text.txt", "w",encoding='gbk') as f:
     f.write('\n'.join(my_code))
+
+

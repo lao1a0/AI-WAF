@@ -15,8 +15,7 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Embedding, Activation, merge, Input, Lambda, Reshape, LSTM, RNN, \
     SimpleRNNCell, SpatialDropout1D, Add, Maximum
 from keras.layers import Conv1D, Flatten, Dropout, MaxPool1D, GlobalAveragePooling1D, GlobalMaxPooling1D, concatenate, AveragePooling1D
-from keras import regularizers
-from keras.layers import BatchNormalization
+
 from tensorflow.keras.regularizers import l2
 
 from config import inputLen
